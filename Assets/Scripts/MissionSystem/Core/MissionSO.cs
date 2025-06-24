@@ -20,22 +20,52 @@ namespace MissionSystem.Core
         public MissionSO nextMission;
         
         /* Private variables */
-        private bool isRunning = false;
         private Timer timer = new Timer();
+        private int progress = 0;
 
         public event Action OnStarted;
         public event Action OnMissionPointReached;
         public event Action OnFinished;
+        
+        /// <summary>
+        /// The function is called every time when we start the new mission.
+        /// It is self-subcribed for OnFinished event to handle the end of mission
+        /// and automatically start the new one
+        /// </summary>
         public async Task Start()
         {
-            isRunning = true;
-            await timer.StartAsync(startDelay * 1000, OnStarted.Invoke);
+            Debug.Log($"MissionSO: Mission {missionName} starting in {startDelay} seconds");
+            await timer.StartAsync(startDelay * 1000);
+            
+            OnStarted?.Invoke();
+            Debug.Log($"MissionSO: Mission {missionName} started!");
+
+            OnFinished += HandleMissionFinished;
         }
 
+        private void HandleMissionFinished()
+        {
+            OnFinished -= HandleMissionFinished;
+
+            if (nextMission != null)
+            {
+                _ = nextMission.Start();
+            }
+        }
+
+        /// <summary>
+        /// Used only to handle the progress with Button
+        /// </summary>
         public void AddCount()
         {
-            goal++;
+            progress++;
             OnMissionPointReached?.Invoke();
+            
+            if (progress == goal) OnFinished?.Invoke();
         }
+        
+        /* Used for UI */
+        public int GetGoal() => goal;
+        public int GetProgress() => progress;
     }
 }
