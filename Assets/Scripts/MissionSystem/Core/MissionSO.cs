@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using MissionSystem.Interfaces;
@@ -51,6 +52,12 @@ namespace MissionSystem.Core
             {
                 _ = nextMission.Start();
             }
+        }
+        
+        public IEnumerator DrawDelay(System.Action<string> drawAction)
+        {
+            yield return new WaitForSeconds(startDelay);
+            drawAction?.Invoke(missionName + "  " + GetProgress() + "/" + GetGoal());
         }
 
         /// <summary>
