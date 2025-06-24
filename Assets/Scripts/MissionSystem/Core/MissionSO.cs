@@ -1,14 +1,41 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Threading.Tasks;
+using UnityEngine;
+using MissionSystem.Interfaces;
 
 namespace MissionSystem.Core
 {
     [CreateAssetMenu(fileName = "Mission", menuName = "Missions/Mission")]
-    public class MissionSO : ScriptableObject
+    public class MissionSO : ScriptableObject, IMission
     {
-        // public variables are editable for SO, so no need in [ScriptableObject] tag
-        public string name;
-        public int delay;
+        [Header("Mission Setup")]
+        public string missionName;
+        public int startDelay = 0;
+        public int goal = 0;
+
+        [Header("Mission Chain")]
+        public ScriptableObject currentMission;
         
-        // TODO: link to IMission and previous/next missions
+        public MissionSO previousMission;
+        public MissionSO nextMission;
+        
+        /* Private variables */
+        private bool isRunning = false;
+        private Timer timer = new Timer();
+
+        public event Action OnStarted;
+        public event Action OnMissionPointReached;
+        public event Action OnFinished;
+        public async Task Start()
+        {
+            isRunning = true;
+            await timer.StartAsync(startDelay * 1000, OnStarted.Invoke);
+        }
+
+        public void AddCount()
+        {
+            goal++;
+            OnMissionPointReached?.Invoke();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace MissionSystem.Interfaces
 {
@@ -7,7 +8,8 @@ namespace MissionSystem.Interfaces
         event Action OnStarted;
         event Action OnMissionPointReached;
         event Action OnFinished;
-        void Start();
+        
+        Task Start();
     }
 
 }

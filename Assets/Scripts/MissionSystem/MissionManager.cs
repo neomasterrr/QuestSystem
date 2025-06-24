@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using MissionSystem.Core;
+using UnityEngine;
 
 namespace MissionSystem
 {
     public class MissionManager : MonoBehaviour
     {
-        // Creating one instance at once
         public static MissionManager Instance { get; private set; }
+
+        [SerializeField] private List<MissionChainSO> chainQueue;
 
         private void Awake()
         {
@@ -18,6 +22,14 @@ namespace MissionSystem
             
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+
+        private void StartChain()
+        {
+            foreach (var chain in chainQueue)
+            {
+                if (!chain.IsRunning()) chain.Start();
+            }
         }
     }
 }
