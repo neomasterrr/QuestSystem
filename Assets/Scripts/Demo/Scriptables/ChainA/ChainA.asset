@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23353812842e48569ebe1504e7b0b893, type: 3}
+  m_Name: ChainA
+  m_EditorClassIdentifier: 
+  chainName: Collect Fruits
+  missions:
+  - {fileID: 11400000, guid: da05721cebbd0bd41bfb5ea970332441, type: 2}
+  - {fileID: 11400000, guid: 148c342998059cd4fa0c2fe4cee10766, type: 2}
+  - {fileID: 11400000, guid: 5241b90cb0ef11c4a8aa9df3e7b18739, type: 2}
