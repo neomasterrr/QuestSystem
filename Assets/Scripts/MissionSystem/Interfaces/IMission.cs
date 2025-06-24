@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Interfaces
+namespace MissionSystem.Interfaces
 {
     public interface IMission
     {
