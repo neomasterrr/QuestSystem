@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa59bc8c28ef44e19a44de7486a8502d, type: 3}
-  m_Name: CollectGrapes
+  m_Name: CollectMangos
   m_EditorClassIdentifier: 
-  missionName: CollectGrapes
+  missionName: Collect Mangos
   startDelay: 0
-  goal: 2
+  goal: 3
   currentMission: {fileID: 11400000}
-  previousMission: {fileID: 11400000, guid: da05721cebbd0bd41bfb5ea970332441, type: 2}
-  nextMission: {fileID: 0}
+  previousMission: {fileID: 0}
+  nextMission: {fileID: 11400000, guid: 148c342998059cd4fa0c2fe4cee10766, type: 2}
