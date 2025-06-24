@@ -67,9 +67,16 @@ namespace MissionSystem
                                activeChains.GetCurrentMission().GetProgress() + "/" + 
                                activeChains.GetCurrentMission().GetGoal() + "\n"));
 
-            UIHandler.SetMissionName(missionsList);
-            
             _chainIndex++;
+            
+            foreach (var chains in _activeChains)
+            {
+                var mission = chains.GetCurrentMission();
+                StartCoroutine(mission.DrawDelay(UIHandler.SetMissionName));
+            }
+            
+            
+            
             return;
 
             void OnChainFinishedHandler()
