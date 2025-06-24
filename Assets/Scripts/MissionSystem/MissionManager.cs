@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Demo;
 using MissionSystem.Core;
-using MissionSystem.Demo;
 using UnityEngine;
 
 namespace MissionSystem
@@ -15,8 +15,8 @@ namespace MissionSystem
         [SerializeField] private List<MissionChainSO> chainQueue;
 
         /* Private variables*/
-        private List<MissionChainSO> activeChains = new List<MissionChainSO>();
-        private int chainIndex = 0;
+        private List<MissionChainSO> _activeChains;
+        private int _chainIndex = 0;
         
         private void Awake()
         {
@@ -33,23 +33,21 @@ namespace MissionSystem
             UIHandler = FindAnyObjectByType<UIHandler>();
             if (!UIHandler)
                 Debug.LogWarning("UIHandler not found");
+            
+            _activeChains = new List<MissionChainSO>();
         }
 
         public void StartNewChain()
         {
-            var chain = chainQueue[chainIndex];
+            if (_chainIndex >= chainQueue.Count)
+                return;
+            
+            var chain = chainQueue[_chainIndex];
+            Debug.Log($"Current Chain: {chain}");
 
-            void OnChainFinishedHandler()
+            if (!_activeChains.Contains(chain))
             {
-                UIHandler.SetChainName($"{chain.chainName} completed!");
-                
-                // Removing a chain from the activeChains list.
-                activeChains.Remove(chain);
-            }
-
-            if (!activeChains.Contains(chain))
-            {
-                activeChains.Add(chain);
+                _activeChains.Add(chain);
 
                 chain.OnChainFinished += OnChainFinishedHandler;
                 
@@ -57,24 +55,41 @@ namespace MissionSystem
             }
 
 
-            string chainsList = activeChains
-                .Aggregate("", (current, chains) => 
-                    current + (chains.chainName.ToString() + "\n"));
+            var chainsList = _activeChains
+                .Aggregate("", (current, activeChains) =>
+                    current + (activeChains.chainName.ToString() + "\n"));
 
             UIHandler.SetChainName(chainsList);
+
+            var missionsList = _activeChains
+                .Aggregate("", (current, activeChains) =>
+                    current + (activeChains.GetCurrentMission().missionName + "  " + 
+                               activeChains.GetCurrentMission().GetProgress() + "/" + 
+                               activeChains.GetCurrentMission().GetGoal() + "\n"));
+
+            UIHandler.SetMissionName(missionsList);
             
-            var mission = chain.GetCurrentMission();
-            UIHandler.SetMissionName(mission.missionName + "  " + mission.GetProgress() + "/" + mission.GetGoal());
-            
-            chainIndex++;
+            _chainIndex++;
+            return;
+
+            void OnChainFinishedHandler()
+            {
+                UIHandler.SetChainName($"{chain.chainName} completed!");
+                
+                // Removing a chain from the activeChains list.
+                _activeChains.Remove(chain);
+            }
         }
 
         public void AddProgress()
         {
-            var mission = chainQueue[chainIndex].GetCurrentMission();
-            mission.AddCount();
+            foreach (var chain in _activeChains)
+            {
+                var mission = chain.GetCurrentMission();
+                mission.AddCount();
             
-            UIHandler.SetMissionName(mission.missionName + "  " + mission.GetProgress() + "/" + mission.GetGoal());
+                UIHandler.SetMissionName(mission.missionName + "  " + mission.GetProgress() + "/" + mission.GetGoal());
+            }
         }
     }
 }

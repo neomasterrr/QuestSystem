@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23353812842e48569ebe1504e7b0b893, type: 3}
-  m_Name: ChainA
+  m_Name: ChainB
   m_EditorClassIdentifier: 
-  chainName: Collect Fruits
+  chainName: Plant Greens
   missions:
-  - {fileID: 11400000, guid: da05721cebbd0bd41bfb5ea970332441, type: 2}
-  - {fileID: 11400000, guid: 148c342998059cd4fa0c2fe4cee10766, type: 2}
+  - {fileID: 11400000, guid: bb6dca2c700460547b343ddc902a40a8, type: 2}
+  - {fileID: 11400000, guid: a7678beb746244342b2d6c27f4645ec5, type: 2}
+  - {fileID: 11400000, guid: 5fed6666db1775845859f79c9ae6da00, type: 2}
+  - {fileID: 11400000, guid: febec6d30f6a16942a488c8eb8405e14, type: 2}

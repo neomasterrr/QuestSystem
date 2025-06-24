@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MissionSystem.Demo;
+using Demo;
 using MissionSystem.Interfaces;
 using UnityEngine;
 
