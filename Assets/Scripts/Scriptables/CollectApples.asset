@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa59bc8c28ef44e19a44de7486a8502d, type: 3}
   m_Name: CollectApples
   m_EditorClassIdentifier: 
-  name: 
-  delay: 0
+  missionName: 
+  startDelay: 0
+  currentMission: {fileID: 0}
+  previousMission: {fileID: 0}
+  nextMission: {fileID: 0}

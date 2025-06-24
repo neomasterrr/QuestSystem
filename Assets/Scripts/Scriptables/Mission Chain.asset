@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23353812842e48569ebe1504e7b0b893, type: 3}
   m_Name: Mission Chain
   m_EditorClassIdentifier: 
-  missions: []
+  chainName: 
+  missions:
+  - {fileID: 11400000, guid: da05721cebbd0bd41bfb5ea970332441, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
