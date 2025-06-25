@@ -48,10 +48,21 @@ namespace MissionSystem
             if (!_activeChains.Contains(chain))
             {
                 _activeChains.Add(chain);
-
-                chain.OnChainFinished += OnChainFinishedHandler;
                 
-                StartCoroutine(chain.StartChain());
+                Action OnChainFinishedHandler = null;
+                OnChainFinishedHandler = new Action(() =>
+                {
+                    UIHandler.SetChainName($"{chain.chainName} completed!");
+
+                    // Removing a chain from the activeChains list.
+                    _activeChains.Remove(chain);
+                    
+                    chain.OnChainFinished -= () => OnChainFinishedHandler();
+                });
+
+                chain.OnChainFinished += () => OnChainFinishedHandler();
+                
+                chain.StartChain();
             }
 
 
@@ -60,32 +71,29 @@ namespace MissionSystem
                     current + (activeChains.chainName.ToString() + "\n"));
 
             UIHandler.SetChainName(chainsList);
-
+            
             var missionsList = _activeChains
                 .Aggregate("", (current, activeChains) =>
                     current + (activeChains.GetCurrentMission().missionName + "  " + 
                                activeChains.GetCurrentMission().GetProgress() + "/" + 
                                activeChains.GetCurrentMission().GetGoal() + "\n"));
+            
+            UIHandler.SetMissionName(missionsList);
 
             _chainIndex++;
             
-            foreach (var chains in _activeChains)
+            /*foreach (var chains in _activeChains)
             {
                 var mission = chains.GetCurrentMission();
-                StartCoroutine(mission.DrawDelay(UIHandler.SetMissionName));
-            }
-            
-            
-            
-            return;
-
-            void OnChainFinishedHandler()
-            {
-                UIHandler.SetChainName($"{chain.chainName} completed!");
                 
-                // Removing a chain from the activeChains list.
-                _activeChains.Remove(chain);
-            }
+                var missionsList = _activeChains
+                    .Aggregate("", (current, activeChains) =>
+                        current + (mission.missionName + "  " + 
+                                   mission.GetProgress() + "/" + 
+                                   mission.GetGoal() + "\n"));
+                
+                StartCoroutine(mission.DrawDelay(UIHandler.SetMissionName(missionsList)));
+            }*/
         }
 
         public void AddProgress()
