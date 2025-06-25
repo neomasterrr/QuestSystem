@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Demo;
 using MissionSystem.Interfaces;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace MissionSystem.Core
@@ -21,61 +22,52 @@ namespace MissionSystem.Core
         private MissionSO _currentMission;
         private int missionIndex = 0;
         
+        private Timer timer = new Timer();
+        
         // Event is intended to automatically finish the chain when all missions are completed
         public event Action OnChainFinished;
 
-        public IEnumerator StartChain()
+        public void StartChain()
         {
-            while (missionIndex < missions.Count)
-            {
-                bool finished = false;
-
-                // Start the next mission
-                StartNextMission();
-
-                // Wait for the current mission to be assigned
-                while (_currentMission == null)
-                    yield return null;
-
-                Debug.Log($"Starting new mission {_currentMission.name} on chain {chainName}");
-
-                // Ensurance to sub and unsub from the event in MissionSO
-                void OnFinishedHandler() => finished = true;
-                
-                // Subscribe to OnFinished
-                _currentMission.OnFinished += OnFinishedHandler;
-
-                // Wait for OnFinished event
-                while (!finished)
-                    yield return null;
-
-                _currentMission.OnFinished -= OnFinishedHandler;
-
-
-            }
-            
-            // Invoke for end of Chain
-            OnChainFinished?.Invoke();
+            missionIndex = 0;
+            StartNextMission();
         }
 
         /// <summary>
         /// Function is used to track if the MissionChain still contains the missions to be done.
         /// If not, then it will throw a warning.
         /// </summary>
-        private async void StartNextMission()
+        private async Task StartNextMission()
         {
             try
             {
-                if (missionIndex < missions.Count)
-                {
-                    _currentMission = Instantiate(missions[missionIndex]);
-                    await _currentMission.Start();
-                    missionIndex++;
-                }
+                _currentMission = Instantiate(missions[missionIndex]);
+
+                _currentMission.OnFinished += OnMissionFinished;
+
+                if (_currentMission.startDelay > 0)
+                    await timer.StartAsync(_currentMission.startDelay * 1000);
+                
+                _currentMission.Start();
+                missionIndex++;
+                
             }
             catch (Exception e)
             {
                 Debug.LogWarning($"Exception in StartNextMission: {e.Message}\n{e.StackTrace}");
+            }
+        }
+
+        private void OnMissionFinished()
+        {
+            _currentMission.OnFinished -= OnMissionFinished;
+            if (missionIndex < missions.Count)
+            {
+                StartNextMission();
+            }
+            else
+            {
+                OnChainFinished?.Invoke();
             }
         }
         
