@@ -30,34 +30,15 @@ namespace MissionSystem.Core
         
         /// <summary>
         /// The function is called every time when we start the new mission.
-        /// It is self-subcribed for OnFinished event to handle the end of mission
+        /// It is self-subscribed for OnFinished event to handle the end of mission
         /// and automatically start the new one
         /// </summary>
         public async Task Start()
         {
             Debug.Log($"MissionSO: Mission {missionName} starting in {startDelay} seconds");
-            await timer.StartAsync(startDelay * 1000);
             
             OnStarted?.Invoke();
             Debug.Log($"MissionSO: Mission {missionName} started!");
-
-            OnFinished += HandleMissionFinished;
-        }
-
-        private void HandleMissionFinished()
-        {
-            OnFinished -= HandleMissionFinished;
-
-            if (nextMission != null)
-            {
-                _ = nextMission.Start();
-            }
-        }
-        
-        public IEnumerator DrawDelay(System.Action<string> drawAction)
-        {
-            yield return new WaitForSeconds(startDelay);
-            drawAction?.Invoke(missionName + "  " + GetProgress() + "/" + GetGoal());
         }
 
         /// <summary>
